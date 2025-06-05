@@ -1,0 +1,38 @@
+version: '3.10'
+
+services:
+  airflow-lite-app:
+    build:
+      context: . # Build from the current directory where Dockerfile is located
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Map host port 8080 to container port 8080
+    volumes:
+      # Mount the local service_account.json file into the container
+      # IMPORTANT: Make sure your service_account.json is in the same directory as docker-compose.yml
+      - ./service_account.json:/app/service_account.json:ro
+    environment:
+      # These environment variables configure your Flask app
+      FLASK_APP: app.py
+      GCS_BUCKET_NAME: "your-airflow-lite-bucket" # REPLACE with your actual GCS bucket name
+      BASIC_AUTH_USERNAME: "admin"
+      BASIC_AUTH_PASSWORD: "admin" # REPLACE with your desired password
+      # Point BigQuery to the mounted service account file within the container
+      BIGQUERY_SERVICE_ACCOUNT_KEY_PATH: "/app/service_account.json"
+      # Optional: Explicitly set BigQuery Project ID if your credentials don't default to it
+      # BIGQUERY_PROJECT_ID: "your-gcp-project-id"
+    # Ensure logs are visible in docker-compose logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    # Cloud Run specific setting, useful for local testing too,
+    # as it simulates single request handling per container.
+    # Note: If you have a true GCS emulator, you might remove this to test higher concurrency,
+    # but for direct GCS interaction, it helps prevent immediate race conditions.
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M

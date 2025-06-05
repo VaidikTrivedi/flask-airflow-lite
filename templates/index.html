@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <h2>DAGs Overview</h2>
+    <div class="dag-list">
+        {% if dags %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>DAG ID</th>
+                        <th>Latest Run Status</th>
+                        <th>Latest Run ID</th>
+                        <th>Latest Run Start</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dag in dags %}
+                        <tr>
+                            <td><a href="{{ url_for('dag_detail', dag_id=dag.dag_id) }}">{{ dag.dag_id }}</a></td>
+                            <td><span class="status-{{ dag.latest_run_status.lower() }}">{{ dag.latest_run_status }}</span></td>
+                            <td>
+                                {% if dag.latest_run_id %}
+                                    <a href="{{ url_for('run_detail', dag_id=dag.dag_id, run_id=dag.latest_run_id) }}">{{ dag.latest_run_id[:8] }}...</a>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>{{ dag.latest_run_start }}</td>
+                            <td>
+                                <form action="{{ url_for('trigger_dag', dag_id=dag.dag_id) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="trigger-button">Trigger</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No DAGs defined yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

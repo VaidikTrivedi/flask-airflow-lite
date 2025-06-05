@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Log: {{ task_id }} ({{ run_id[:8] }}...){% endblock %}
+
+{% block content %}
+    <h2>Log for Task: {{ task_id }} (Run: {{ run_id[:8] }}... in DAG: {{ dag_id }})</h2>
+    <pre class="log-content">{{ log_content }}</pre>
+    <p><a href="{{ url_for('run_detail', dag_id=dag_id, run_id=run_id) }}">Back to Run Details</a></p>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}DAG: {{ dag_id }}{% endblock %}
+
+{% block content %}
+    <h2>DAG: {{ dag_id }}</h2>
+    <h3>Run History</h3>
+    <div class="run-history">
+        {% if runs %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Run ID</th>
+                        <th>Status</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for run in runs %}
+                        <tr>
+                            <td>{{ run.run_id[:8] }}...</td>
+                            <td><span class="status-{{ run.status.lower() }}">{{ run.status }}</span></td>
+                            <td>{{ run.start_time }}</td>
+                            <td>{{ run.end_time }}</td>
+                            <td><a href="{{ url_for('run_detail', dag_id=dag_id, run_id=run.run_id) }}">View Details</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No runs found for this DAG yet.</p>
+        {% endif %}
+    </div>
+{% endblock %}

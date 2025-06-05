@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Run: {{ run_id }}{% endblock %}
+
+{% block content %}
+    <h2>DAG: {{ dag_id }} - Run: {{ run_id[:8] }}...</h2>
+    <div class="run-summary">
+        <p><strong>Status:</strong> <span class="status-{{ run_metadata.status.lower() }}">{{ run_metadata.status }}</span></p>
+        <p><strong>Start Time:</strong> {{ run_metadata.start_time }}</p>
+        <p><strong>End Time:</strong> {{ run_metadata.end_time if run_metadata.end_time else 'N/A' }}</p>
+    </div>
+
+    <h3>Task Instances</h3>
+    <div class="task-instances">
+        {% if run_metadata.task_instances %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task ID</th>
+                        <th>Status</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Dependencies</th>
+                        <th>Logs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in run_metadata.task_instances %}
+                        <tr>
+                            <td>{{ task.task_id }}</td>
+                            <td><span class="status-{{ task.status.lower() }}">{{ task.status }}</span></td>
+                            <td>{{ task.start_time if task.start_time else 'N/A' }}</td>
+                            <td>{{ task.end_time if task.end_time else 'N/A' }}</td>
+                            <td>
+                                {% if task.depends_on %}
+                                    {{ task.depends_on | join(', ') }}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if task.log_file_path %}
+                                    <a href="{{ url_for('get_task_log', dag_id=dag_id, run_id=run_id, task_id=task.task_id) }}">View Log</a>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No task instances found for this run.</p>
+        {% endif %}
+    </div>
+{% endblock %}

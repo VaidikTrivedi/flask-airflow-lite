@@ -1,0 +1,133 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+header {
+    background-color: #0277bd; /* Darker blue, similar to Airflow header */
+    color: white;
+    padding: 1em 2em;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    margin: 0;
+    display: inline-block;
+}
+
+header h1 a {
+    color: white;
+    text-decoration: none;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    margin-left: 20px;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 1em;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+main {
+    padding: 2em;
+}
+
+h2, h3 {
+    color: #0277bd;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5em;
+    margin-top: 1.5em;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+table th {
+    background-color: #e3f2fd; /* Lighter blue */
+    font-weight: bold;
+    color: #01579b;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+a {
+    color: #0277bd;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    background-color: #0277bd;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+button:hover {
+    background-color: #01579b;
+}
+
+.status-queued { color: #8c8c8c; } /* Grey */
+.status-running { color: #ff9800; } /* Orange */
+.status-pending { color: #ffc107; } /* Yellow */
+.status-success { color: #4CAF50; } /* Green */
+.status-failed { color: #f44336; } /* Red */
+.status-unknown { color: #757575; } /* Darker grey */
+
+.log-content {
+    background-color: #272822; /* Dark background for logs */
+    color: #f8f8f2; /* Light text */
+    padding: 1em;
+    border-radius: 4px;
+    overflow-x: auto;
+    white-space: pre-wrap; /* Wrap long lines */
+    font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 0.9em;
+    max-height: 500px; /* Limit height */
+    resize: vertical; /* Allow resizing */
+}
+
+footer {
+    text-align: center;
+    padding: 1em;
+    margin-top: 2em;
+    color: #666;
+    border-top: 1px solid #eee;
+}
