@@ -1,6 +1,11 @@
+import os
 import uuid
 import datetime
 from typing import List, Dict, Callable
+
+PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "your-gcp-project-id")
+DATASET = os.environ.get("BQ_DATASET", "your_dataset")
+TABLE = os.environ.get("BQ_TABLE", "your_table")
 
 class Task:
     def __init__(self, task_id: str, bigquery_query: str, depends_on: List[str] = None): # type: ignore
@@ -41,21 +46,11 @@ class DAG:
 # --- Define Your DAGs Here ---
 # Example 1: Sequential DAG
 dag_etl_pipeline = DAG(
-    dag_id="etl_pipeline",
+    dag_id="etl_pipeline_test",
     tasks=[
         Task(
             task_id="extract_data",
             bigquery_query="SELECT count(*) FROM `bigquery-public-data.stackoverflow.posts_questions` WHERE creation_date > '2023-01-01'",
-        ),
-        Task(
-            task_id="transform_data",
-            bigquery_query="SELECT count(*) FROM `bigquery-public-data.stackoverflow.posts_answers` WHERE creation_date > '2023-01-01'",
-            depends_on=["extract_data"]
-        ),
-        Task(
-            task_id="load_to_dashboard",
-            bigquery_query="SELECT count(*) FROM `bigquery-public-data.stackoverflow.users` WHERE creation_date > '2023-01-01'",
-            depends_on=["transform_data"]
         )
     ]
 )
@@ -84,7 +79,7 @@ dag_marketing_reports = DAG(
 ALL_DAGS: Dict[str, DAG] = {
     dag.dag_id: dag for dag in [
         dag_etl_pipeline,
-        dag_marketing_reports,
+        # dag_marketing_reports,
         # Add more DAGs here
     ]
 }
@@ -94,3 +89,21 @@ def get_dag_by_id(dag_id: str):
 
 def get_all_dag_ids() -> List[str]:
     return list(ALL_DAGS.keys())
+
+
+
+# Example 1: Sequential DAG
+# dag_etl_pipeline = DAG(
+#     dag_id="etl_pipeline",
+#     tasks=[
+#         Task(
+#             task_id="extract_data",
+#             bigquery_query=f"SELECT * from {PROJECT_ID}.{DATASET}.{TABLE} LIMIT 50",
+#         ),
+#         # Task(
+#         #     task_id="transform_data",
+#         #     bigquery_query="SELECT count(*) FROM `bigquery-public-data.stackoverflow.posts_answers` WHERE creation_date > '2023-01-01'",
+#         #     depends_on=["extract_data"]
+#         # )
+#     ]
+# )

@@ -8,6 +8,15 @@ logger = logging.getLogger(__name__)
 service_key_path = 'service_account.json'
 gcs_client = storage.Client.from_service_account_json(service_key_path)
 
+def _get_all_buckets():
+    """Helper to get all buckets in the GCS project."""
+    try:
+        buckets = gcs_client.list_buckets()
+        return [bucket.name for bucket in buckets]
+    except Exception as e:
+        logger.error(f"Error listing buckets: {e}")
+        return []
+
 def _get_blob(bucket_name, blob_name):
     """Helper to get a blob object."""
     bucket = gcs_client.get_bucket(bucket_name)
