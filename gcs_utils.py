@@ -1,12 +1,27 @@
+import os
 from google.cloud import storage
+from google.cloud import secretmanager
+from google.oauth2 import service_account
 import json
 import logging
 
 logger = logging.getLogger(__name__)
 
+def get_gcs_client_from_secret():
+    project_id = os.environ.get("SECRET_MANAGER_PROJECT_ID", None)
+    secret_id = os.environ.get("SECRET_ID", None)
+    if not project_id or not secret_id:
+        raise ValueError("Environment variables SECRET_MANAGER_PROJECT_ID and SECRET_ID must be set.")
+    
+    secret_client = secretmanager.SecretManagerServiceClient()
+    secret_name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
+    response = secret_client.access_secret_version(request={"name": secret_name})
+    service_account_info = json.loads(response.payload.data.decode("UTF-8"))
+    credentials = service_account.Credentials.from_service_account_info(service_account_info)
+    return storage.Client(credentials=credentials, project=project_id)
+
 # Initialize GCS client globally (will reuse connection)
-service_key_path = 'service_account.json'
-gcs_client = storage.Client.from_service_account_json(service_key_path)
+gcs_client = get_gcs_client_from_secret()
 
 def _get_all_buckets():
     """Helper to get all buckets in the GCS project."""
