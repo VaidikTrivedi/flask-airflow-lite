@@ -55,6 +55,16 @@ dag_etl_pipeline = DAG(
     ]
 )
 
+test_pipeline = DAG(
+    dag_id="test_pipeline",
+    tasks=[
+        Task(
+            task_id="test_task",
+            bigquery_query="SELECT * FROM assembled-wh.warehouse.airflow_test",
+        )
+    ]
+)
+
 # Example 2: Parallel Tasks DAG
 dag_marketing_reports = DAG(
     dag_id="marketing_reports",
@@ -78,7 +88,8 @@ dag_marketing_reports = DAG(
 # Register all DAGs for the application to discover
 ALL_DAGS: Dict[str, DAG] = {
     dag.dag_id: dag for dag in [
-        dag_etl_pipeline,
+        test_pipeline
+        # dag_etl_pipeline,
         # dag_marketing_reports,
         # Add more DAGs here
     ]

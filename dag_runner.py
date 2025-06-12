@@ -8,7 +8,7 @@ from typing import List, Dict, Optional
 
 from dag_definitions import DAG, Task
 from gcs_utils import upload_json_to_gcs, download_json_from_gcs, upload_text_to_gcs, list_blobs_in_prefix, download_text_from_gcs
-from bigquery_utils import execute_bigquery_query
+from bigquery_utils import execute_bigquery_query, execute_raw_query
 from config import GCS_BUCKET_NAME, MAX_PARALLEL_TASKS, BIGQUERY_PROJECT_ID
 
 logger = logging.getLogger(__name__)
@@ -69,7 +69,8 @@ class DAGExecutor:
 
         log_content = ""
         try:
-            success, result_or_error = execute_bigquery_query(task.bigquery_query, project_id=BIGQUERY_PROJECT_ID)
+            # success, result_or_error = execute_bigquery_query(task.bigquery_query, project_id=BIGQUERY_PROJECT_ID)
+            success, result_or_error = execute_raw_query(task.bigquery_query)
             if success:
                 task_instance["status"] = "SUCCESS"
                 log_content = f"Task {task.task_id} completed successfully.\nRows affected/processed: {result_or_error}"
@@ -183,7 +184,8 @@ def get_all_dag_runs_summary(dag_id: str) -> List[Dict]:
             run_folders.add(parts[2]) # parts[2] should be the run_id
 
     runs_summary = []
-    for run_id in sorted(list(run_folders), reverse=True): # Sort by run_id (likely creation order)
+    # TODO: Sort run_folders by run_id or timestamp
+    for run_id in sorted(list(run_folders), reverse=True): 
         metadata_path = f"dag_runs/{dag_id}/{run_id}/metadata.json"
         metadata = download_json_from_gcs(GCS_BUCKET_NAME, metadata_path)
         if metadata:

@@ -1,5 +1,6 @@
 service_account.json
-temp.py
+temp.*
 .vscode/launch.json
 .venv/
 .env
+gcp_default_credentials.json

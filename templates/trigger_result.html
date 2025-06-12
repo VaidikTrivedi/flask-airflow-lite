@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}DAG Triggered{% endblock %}
+
+{% block content %}
+    <h2>DAG '{{ dag_id }}' Triggered</h2>
+    <p><strong>Status:</strong> {{ status }}</p>
+    <p><strong>Run ID:</strong> {{ run_id }}</p>
+    <p><a href="{{ detail_url }}">View Run Details</a></p>
+    <button onclick=`window.location.href='/'`>Back to Dashboard</button>
+{% endblock %}

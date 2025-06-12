@@ -17,5 +17,7 @@ BIGQUERY_SERVICE_ACCOUNT_KEY_PATH = os.environ.get(
 # BigQuery Project ID (optional, if not inferred from credentials)
 BIGQUERY_PROJECT_ID = os.environ.get("BIGQUERY_PROJECT_ID")
 
+SECRET_ID = os.environ.get("SECRET_ID", "secret_id")  
+
 # Maximum number of parallel tasks to run within a single DAG run
 MAX_PARALLEL_TASKS = 4
